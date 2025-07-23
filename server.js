@@ -31,14 +31,22 @@ app.post('/api/send-certificate', upload.single('file'), async (req, res) => {
       to: email,
       subject: 'Tu certificado de finalización',
       text: '¡Felicidades! Adjuntamos tu certificado de finalización del módulo ENPRES.',
-      attachments: [{ filename: file.originalname, content: file.buffer }]
+      attachments: [
+        {
+          filename: file.originalname,
+          content: file.buffer
+        }
+      ]
     });
 
     res.status(200).send('Certificado enviado con éxito');
   } catch (err) {
-    console.error(err);
-    res.status(500).send('Error al enviar el certificado');
+    console.error('Error enviando correo:', err);
+    res.status(500).send('Error interno');
   }
 });
 
-app.listen(5001, () => console.log('Servidor backend corriendo en http://localhost:5001'));
+const port = process.env.PORT || 5001;
+app.listen(port, () => {
+  console.log(`Servidor de certificados activo en http://localhost:${port}`);
+});
